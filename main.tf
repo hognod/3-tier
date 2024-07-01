@@ -146,3 +146,31 @@ resource "aws_instance" "db-c" {
     Name = "3-tier-db-c"
   }
 }
+
+output "bastion-ip" {
+  value = aws_instance.bastion.public_ip
+}
+
+output "web-a-ip" {
+  value = aws_instance.web-a.private_ip
+}
+
+output "web-c-ip" {
+  value = aws_instance.web-c.private_ip
+}
+
+output "was-a-ip" {
+  value = aws_instance.was-a.private_ip
+}
+
+output "was-c-ip" {
+  value = aws_instance.was-c.private_ip
+}
+
+output "db-a-ip" {
+  value = aws_instance.db-a.private_ip
+}
+
+output "db-c-ip" {
+  value = aws_instance.db-c.private_ip
+}
