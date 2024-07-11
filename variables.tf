@@ -3,6 +3,8 @@ variable "vpc_cidr" {
   default = "10.0.0.0/16"
 }
 
-variable "key_pair_name" {
+variable "ami_id" {
   type = string
+  default = "ami-09eb4311cbaecf89d"
+  description = "ubuntu 20.04"
 }
