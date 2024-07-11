@@ -28,4 +28,8 @@ resource "terraform_data" "bastion" {
     source = "${path.module}/terraform.pem"
     destination = "/home/ubuntu/terraform.pem"
   }
+
+  provisioner "remote-exec" {
+    script = "./scripts/bastion.sh"
+  }
 }
