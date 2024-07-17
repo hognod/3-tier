@@ -78,7 +78,7 @@ resource "terraform_data" "web-a" {
   provisioner "remote-exec" {
     inline = [
       "sudo cp ~/gunicorn.conf /etc/nginx/conf.d/gunicorn.conf",
-      "sudo sed 's/<WEB_LB_DNS>/${aws_lb.web.dns_name}/g' -i /etc/nginx/conf.d/gunicorn.conf",
+      "sudo sed 's/<WEB_LB_DNS>/${aws_route53_record.web-lb.fqdn}/g' -i /etc/nginx/conf.d/gunicorn.conf",
       "sudo sed 's/<WEB_LB_PORT>/${aws_lb_listener.web.port}/g' -i /etc/nginx/conf.d/gunicorn.conf",
       "sudo sed 's/<WAS_LB_DNS>/${aws_lb.was.dns_name}/g' -i /etc/nginx/conf.d/gunicorn.conf",
       "sudo sed 's/<WAS_LB_PORT>/${aws_lb_listener.was.port}/g' -i /etc/nginx/conf.d/gunicorn.conf",
@@ -114,7 +114,7 @@ resource "terraform_data" "web-c" {
   provisioner "remote-exec" {
     inline = [
       "sudo cp ~/gunicorn.conf /etc/nginx/conf.d/gunicorn.conf",
-      "sudo sed 's/<WEB_LB_DNS>/${aws_lb.web.dns_name}/g' -i /etc/nginx/conf.d/gunicorn.conf",
+      "sudo sed 's/<WEB_LB_DNS>/${aws_route53_record.web-lb.fqdn}/g' -i /etc/nginx/conf.d/gunicorn.conf",
       "sudo sed 's/<WEB_LB_PORT>/${aws_lb_listener.web.port}/g' -i /etc/nginx/conf.d/gunicorn.conf",
       "sudo sed 's/<WAS_LB_DNS>/${aws_lb.was.dns_name}/g' -i /etc/nginx/conf.d/gunicorn.conf",
       "sudo sed 's/<WAS_LB_PORT>/${aws_lb_listener.was.port}/g' -i /etc/nginx/conf.d/gunicorn.conf",

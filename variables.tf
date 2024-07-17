@@ -8,3 +8,8 @@ variable "ami_id" {
   default = "ami-09eb4311cbaecf89d"
   description = "ubuntu 20.04"
 }
+
+variable "hosted_zone_name" {
+  type = string
+  default = "ddimtech.click"
+}
