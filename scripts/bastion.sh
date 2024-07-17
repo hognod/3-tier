@@ -1,7 +1,7 @@
 #! /bin/bash
 
 until [[ -f /var/lib/cloud/instance/boot-finished ]]; do
-  sleep 1
+  sleep 5
 done
 
 sudo apt update
@@ -36,3 +36,12 @@ sudo mv /var/cache/apt/archives/*.deb ~/python-installer/prerequisites
 wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1w.tar.gz -P ~/python-installer/openssl
 
 wget --no-check-certificate https://www.python.org/ftp/python/3.12.4/Python-3.12.4.tgz -P ~/python-installer/python
+
+#psql
+sudo install -d /usr/share/postgresql-common/pgdg
+sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc
+sudo sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+sudo apt update
+sudo apt install -y --download-only postgresql-16
+sudo mv /var/cache/apt/archives/*.deb ~/postgresql-installer
