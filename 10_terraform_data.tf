@@ -90,7 +90,7 @@ resource "terraform_data" "web" {
       "sudo cp ~/gunicorn.conf /etc/nginx/conf.d/gunicorn.conf",
       "sudo sed 's/<WEB_LB_DNS>/${aws_route53_record.web-lb.fqdn}/g' -i /etc/nginx/conf.d/gunicorn.conf",
       "sudo sed 's/<WEB_LB_PORT>/${aws_lb_listener.web.port}/g' -i /etc/nginx/conf.d/gunicorn.conf",
-      "sudo sed 's/<WAS_LB_DNS>/${aws_lb.was.dns_name}/g' -i /etc/nginx/conf.d/gunicorn.conf",
+      "sudo sed 's/<WAS_LB_DNS>/${aws_route53_record.was-lb.fqdn}/g' -i /etc/nginx/conf.d/gunicorn.conf",
       "sudo sed 's/<WAS_LB_PORT>/${aws_lb_listener.was.port}/g' -i /etc/nginx/conf.d/gunicorn.conf",
       "sudo systemctl enable --now nginx.service"
     ]
@@ -130,25 +130,14 @@ resource "terraform_data" "was" {
   }
 
   provisioner "remote-exec" {
+    script = "./scripts/was.sh"
+  }
+
+  provisioner "remote-exec" {
     inline = [
-      "sudo ~/gunicorn.service /etc/systemd/system/gunicorn.service",
-      "sudo dpkg -i ~/python-installer/prerequisites/*.deb",
-      "tar -zxf ~/python-installer/openssl/openssl-1.1.1w.tar.gz -C ~/",
-      "sudo mkdir -p /usr/local/ssl",
-      "cd ~/openssl-1.1.1w",
-      "./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared",
-      "sudo mv /usr/bin/openssl /usr/bin/openssl_bak",
-      "sudo make",
-      "sudo make install",
-      "sudo ln -s /usr/local/ssl/bin/openssl /usr/bin/openssl",
-      "echo export LD_LIBRARY_PATH=\"/usr/local/ssl/lib$${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\" >> ~/.bashrc",
-      "tar -zxf ~/python-installer/python/Python-3.12.4.tgz -C ~/",
-      "cd ~/Python-3.12.4",
-      "./configure --enable-optimizations",
-      "sudo make altinstall",
-      "echo alias python=\"python3.12\" >> ~/.bashrc",
-      "echo export PATH=\"/home/ubuntu/.local/bin:$PATH\" >> ~/.bashrc",
-      "python3.12 -m pip install --no-index --find-links ~/python-installer/packages virtualenv django gunicorn psycopg2"
+      "sed 's/ALLOWED_HOSTS = \\[\\]/ALLOWED_HOSTS = \\[\"${aws_route53_record.was-lb.fqdn}\"\\]/g' -i ~/working_directory/project/settings.py",
+      "sudo cp ~/gunicorn.service /etc/systemd/system/gunicorn.service",
+      "sudo systemctl enable --now gunicorn.service"
     ]
   }
 }

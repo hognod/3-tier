@@ -64,6 +64,7 @@ resource "aws_lb" "web" {
 resource "aws_lb" "was" {  
   name = "3-tier-was-lb"
   load_balancer_type = "network"
+  internal = true
   security_groups = [ aws_security_group.was-lb.id ]
   subnets = [
     aws_subnet.was-a.id,
