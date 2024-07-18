@@ -54,6 +54,35 @@ resource "aws_security_group" "was-lb" {
   }
 }
 
+resource "aws_security_group" "db-lb" {
+  name = "3-tier-db-lb"
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "TCP"
+    cidr_blocks = [
+      aws_subnet.was-a.cidr_block,
+      aws_subnet.was-c.cidr_block
+    ]
+  }
+
+  egress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "TCP"
+    cidr_blocks = [
+      aws_subnet.db-a.cidr_block,
+      aws_subnet.db-c.cidr_block
+    ]
+  }
+
+  tags = {
+    Name = "3-tier-db-lb"
+  }
+}
+
 //instance
 resource "aws_security_group" "bastion" {
   name = "3-tier-bastion"
@@ -181,10 +210,7 @@ resource "aws_security_group" "was-a" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "TCP"
-    cidr_blocks = [
-      aws_subnet.db-a.cidr_block,
-      aws_subnet.db-c.cidr_block,
-    ]
+    security_groups = [aws_security_group.db-lb.id]
   }
 
   tags = {
@@ -214,10 +240,7 @@ resource "aws_security_group" "was-c" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "TCP"
-    cidr_blocks = [
-      aws_subnet.db-a.cidr_block,
-      aws_subnet.db-c.cidr_block,
-    ]
+    security_groups = [aws_security_group.db-lb.id]
   }
 
   tags = {
@@ -240,10 +263,7 @@ resource "aws_security_group" "db-a" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "TCP"
-    security_groups = [
-      aws_security_group.was-a.id,
-      aws_security_group.was-c.id
-    ]
+    security_groups = [aws_security_group.db-lb.id]
   }
 
   tags = {
@@ -266,10 +286,7 @@ resource "aws_security_group" "db-c" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "TCP"
-    security_groups = [
-      aws_security_group.was-a.id,
-      aws_security_group.was-c.id
-    ]
+    security_groups = [aws_security_group.db-lb.id]
   }
 
   tags = {
