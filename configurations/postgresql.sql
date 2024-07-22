@@ -1,4 +1,4 @@
-CREATE TABLE "Test" (no int, name varchar(10), password varchar(20));
+CREATE TABLE "Test" (no int, name varchar(20), password varchar(20));
 
 INSERT INTO "Test"(no, name, password) VALUES(1, 'test-user1', 'test-password1');
 INSERT INTO "Test"(no, name, password) VALUES(2, 'test-user2', 'test-password2');

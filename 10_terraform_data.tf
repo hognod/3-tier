@@ -167,7 +167,7 @@ resource "terraform_data" "db" {
   provisioner "remote-exec" {
     inline = [
       "sudo dpkg -i ~/postgresql-installer/*.deb",
-      "sudo sed \"s#listen_addresses = 'localhost'#listen_addresses = '*'#g\" -i /etc/postgresql/16/main/postgresql.conf",
+      "sudo sed \"s/#listen_addresses = 'localhost'/listen_addresses = '*'/g\" -i /etc/postgresql/16/main/postgresql.conf",
       "sudo sed \"s#127.0.0.1/32#0.0.0.0/0#g\" -i /etc/postgresql/16/main/pg_hba.conf",
       "sudo systemctl enable --now postgresql.service",
 
