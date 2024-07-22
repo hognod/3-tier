@@ -13,3 +13,18 @@ variable "hosted_zone_name" {
   type = string
   default = "ddimtech.click"
 }
+
+variable "db_name" {
+  type = string
+  default = "test-database"
+}
+
+variable "db_user" {
+  type = string
+  default = "test-user"
+}
+
+variable "db_user_password" {
+  type = string
+  default = "test-password"
+}
