@@ -264,6 +264,14 @@ resource "aws_security_group" "db-a" {
     to_port     = 5432
     protocol    = "TCP"
     security_groups = [aws_security_group.db-lb.id]
+    cidr_blocks = [aws_subnet.db-c.cidr_block]
+  }
+
+  egress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "TCP"
+    cidr_blocks = [aws_subnet.db-c.cidr_block]
   }
 
   tags = {
@@ -287,6 +295,14 @@ resource "aws_security_group" "db-c" {
     to_port     = 5432
     protocol    = "TCP"
     security_groups = [aws_security_group.db-lb.id]
+    cidr_blocks = [aws_subnet.db-a.cidr_block]
+  }
+
+  egress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "TCP"
+    cidr_blocks = [aws_subnet.db-a.cidr_block]
   }
 
   tags = {
